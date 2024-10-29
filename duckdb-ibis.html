@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>DuckDB + Ibis (Python) – (Clone of) DuckDB + Polars</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar docked nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">(Clone of) DuckDB + Polars</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./requirements.html"> 
+<span class="menu-text">Requirements</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-slides" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Slides</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-slides">    
+        <li>
+    <a class="dropdown-item" href="./slides/slides.html">
+ <span class="dropdown-text">(Pretty) big data wrangling with DuckDB and Polars</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-duckdb" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">DuckDB</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-duckdb">    
+        <li>
+    <a class="dropdown-item" href="./duckdb-sql.html">
+ <span class="dropdown-text">DuckDB SQL</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./duckdb-dplyr.html">
+ <span class="dropdown-text">DuckDB + dplyr (R)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./duckdb-ibis.html">
+ <span class="dropdown-text">DuckDB + Ibis (Python)</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="./duckdb-julia.html">
+ <span class="dropdown-text">DuckDB in Julia</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-polars" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Polars</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-polars">    
+        <li>
+    <a class="dropdown-item" href="./polars-rpy.html">
+ <span class="dropdown-text">Polars from Python and R</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+    <a href="https://github.com/floswald/duckdb-polars" title="" class="quarto-navigation-tool px-1" aria-label=""><i class="bi bi-github"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./duckdb-ibis.html">DuckDB + Ibis (Python)</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./duckdb-sql.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">DuckDB SQL</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./duckdb-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">DuckDB + dplyr (R)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./duckdb-ibis.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">DuckDB + Ibis (Python)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./duckdb-julia.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">DuckDB in Julia</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#load-libraries" id="toc-load-libraries" class="nav-link active" data-scroll-target="#load-libraries">Load libraries</a></li>
+  <li><a href="#connect-and-register" id="toc-connect-and-register" class="nav-link" data-scroll-target="#connect-and-register">Connect and register</a></li>
+  <li><a href="#first-example" id="toc-first-example" class="nav-link" data-scroll-target="#first-example">First example</a>
+  <ul class="collapse">
+  <li><a href="#digression-interactive-ibis-use-and-eager-execution" id="toc-digression-interactive-ibis-use-and-eager-execution" class="nav-link" data-scroll-target="#digression-interactive-ibis-use-and-eager-execution">Digression: Interactive Ibis use and eager execution</a></li>
+  </ul></li>
+  <li><a href="#aggregation" id="toc-aggregation" class="nav-link" data-scroll-target="#aggregation">Aggregation</a></li>
+  <li><a href="#pivot-reshape" id="toc-pivot-reshape" class="nav-link" data-scroll-target="#pivot-reshape">Pivot (reshape)</a></li>
+  <li><a href="#joins-merges" id="toc-joins-merges" class="nav-link" data-scroll-target="#joins-merges">Joins (merges)</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">DuckDB + Ibis (Python)</h1>
+<p class="subtitle lead">Use a dplyr-esque Python frontend</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="load-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="load-libraries">Load libraries</h2>
+<div id="ebdd4620" class="cell" data-cache="true" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ibis</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ibis.selectors <span class="im">as</span> s</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ibis <span class="im">import</span> _</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ibis.options.interactive = True # enforce eager execution of queries</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="connect-and-register" class="level2">
+<h2 class="anchored" data-anchor-id="connect-and-register">Connect and register</h2>
+<div id="aac208c5" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Instantiate an in-memory DuckDB connection from Ibis</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> ibis.duckdb.<span class="ex">connect</span>()</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">## Register our parquet dataset as a table called "nyc" in our connection</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>con.register(<span class="st">"nyc-taxi/**/*.parquet"</span>, <span class="st">"nyc"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/var/folders/5q/yhcyv3z55wvg6lhgc3h22kk00000gq/T/ipykernel_39424/2359419501.py:5: FutureWarning: `Backend.register` is deprecated as of v9.1; use the explicit `read_*` method for the filetype you are trying to read, e.g., read_parquet, read_csv, etc.
+  con.register("nyc-taxi/**/*.parquet", "nyc")</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">DatabaseTable: nyc
+  vendor_name           string
+  pickup_datetime       timestamp(6)
+  dropoff_datetime      timestamp(6)
+  passenger_count       int64
+  trip_distance         float64
+  pickup_longitude      float64
+  pickup_latitude       float64
+  rate_code             string
+  store_and_fwd         string
+  dropoff_longitude     float64
+  dropoff_latitude      float64
+  payment_type          string
+  fare_amount           float64
+  extra                 float64
+  mta_tax               float64
+  tip_amount            float64
+  tolls_amount          float64
+  total_amount          float64
+  improvement_surcharge float64
+  congestion_surcharge  float64
+  pickup_location_id    int64
+  dropoff_location_id   int64
+  month                 int64
+  year                  int64
+</pre>
+</div>
+</div>
+<p>Aside: Remember that you can create a persistent, disk-backed database by giving it an appropriate name/path. This also enables out-of-core computation for bigger than RAM data.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode py code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># con = ibis.duckdb.connect("nyc.dbb")</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># con.register("nyc-taxi/**/*.parquet", "nyc")</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># etc.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Reference the table from Python. We’ll call this reference object <code>nyc</code> too for consistency, but you could call it whatever you want (e.g., you could call it <code>nyc_ibis</code> to avoid potential ambiguity with the “nyc” table in our actual DuckDB connection). Printing the object to screen will give us a lazy preview.</p>
+<div id="cb943bde" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># con.list_tables() # Optional: confirm that our table is available</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>nyc <span class="op">=</span> con.table(<span class="st">"nyc"</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>nyc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">DatabaseTable: nyc
+  vendor_name           string
+  pickup_datetime       timestamp(6)
+  dropoff_datetime      timestamp(6)
+  passenger_count       int64
+  trip_distance         float64
+  pickup_longitude      float64
+  pickup_latitude       float64
+  rate_code             string
+  store_and_fwd         string
+  dropoff_longitude     float64
+  dropoff_latitude      float64
+  payment_type          string
+  fare_amount           float64
+  extra                 float64
+  mta_tax               float64
+  tip_amount            float64
+  tolls_amount          float64
+  total_amount          float64
+  improvement_surcharge float64
+  congestion_surcharge  float64
+  pickup_location_id    int64
+  dropoff_location_id   int64
+  month                 int64
+  year                  int64
+</pre>
+</div>
+</div>
+</section>
+<section id="first-example" class="level2">
+<h2 class="anchored" data-anchor-id="first-example">First example</h2>
+<div id="08b8f16d" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>q1 <span class="op">=</span> (</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  nyc</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  .group_by([<span class="st">"passenger_count"</span>])</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  .agg(mean_tip <span class="op">=</span> _.tip_amount.mean())</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To see the underlying SQL translation, use <code>ibis.to_sql()</code></p>
+<div id="c8fca461" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>ibis.to_sql(q1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display cell-output-markdown" data-execution_count="5">
+<div class="sourceCode" id="cb8"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">SELECT</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="ot">"t0"</span>.<span class="ot">"passenger_count"</span>,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">AVG</span>(<span class="ot">"t0"</span>.<span class="ot">"tip_amount"</span>) <span class="kw">AS</span> <span class="ot">"mean_tip"</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">FROM</span> <span class="ot">"nyc"</span> <span class="kw">AS</span> <span class="ot">"t0"</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">GROUP</span> <span class="kw">BY</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<p>To actually execute the query and bring the result into Python, we can use the <code>execute()</code> method. By default this will coerce to a <strong>pandas</strong> DataFrame.</p>
+<div id="4ecb619a" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>dat1 <span class="op">=</span> q1.execute()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>dat1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"b4abc5ebcd96423bb897ad02685d563a","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">passenger_count</th>
+<th data-quarto-table-cell-role="th">mean_tip</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>0</td>
+<td>0.862099</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>249</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>254</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>5</td>
+<td>1.102732</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>9</td>
+<td>0.806800</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>65</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">6</td>
+<td>177</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">7</td>
+<td>2</td>
+<td>1.081580</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">8</td>
+<td>208</td>
+<td>0.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">9</td>
+<td>10</td>
+<td>0.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">10</td>
+<td>3</td>
+<td>0.962949</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">11</td>
+<td>6</td>
+<td>1.128365</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">12</td>
+<td>1</td>
+<td>1.151011</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">13</td>
+<td>247</td>
+<td>2.300000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">14</td>
+<td>4</td>
+<td>0.844519</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">15</td>
+<td>7</td>
+<td>0.544118</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">16</td>
+<td>8</td>
+<td>0.350769</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">17</td>
+<td>66</td>
+<td>1.500000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Ibis conversion to polars
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>q1.execute()</code> method above is equivalent calling <code>q1.to_pandas()</code>. A <code>q1.to_polars()</code> equivalent <a href="https://github.com/ibis-project/ibis/pull/8478">has been added</a> to the dev version of Ibis, but is not available with the latest offical release (8.0.0 at the time of writing).</p>
+</div>
+</div>
+<section id="digression-interactive-ibis-use-and-eager-execution" class="level3">
+<h3 class="anchored" data-anchor-id="digression-interactive-ibis-use-and-eager-execution">Digression: Interactive Ibis use and eager execution</h3>
+<p>At the very top of this document, I commented out the <code>ibis.options.interactive</code> option as part of my Ibis configuration. This was because I wanted to demonstrate the default <em>deferred</em> (i.e., lazy) behaviour of Ibis, which is just the same as <strong>d(b)plyr</strong> in R. If you are building data wrangling pipelines, or writing scripts with potentially complex queries, you probably want to preserve this deferred behaviour and avoid eager execution.</p>
+<p><em>However</em>, there are times when you may want to default into eager execution. For example, if your dataset is of manageable size, or you are trying to iterate through different query operations… Or, you might just want to enable it so that you automatically get a nice print return object for your workshop materials. I’ll adopt the latter view, so that I can quickly demonstrate some Ibis syntax and results for the rest of this document.</p>
+<div id="5d88bbe4" class="cell" data-cache="false" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ibis.options.interactive <span class="op">=</span> <span class="va">True</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Okay, let’s speed through some of the same basic queries that we’ve already seen in the DuckDB SQL and R (dplyr) pages. I won’t bother to explain them in depth. Just consider them for demonstration purposes.</p>
+</section>
+</section>
+<section id="aggregation" class="level2">
+<h2 class="anchored" data-anchor-id="aggregation">Aggregation</h2>
+<div id="94a6894d" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  nyc</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  .group_by([<span class="st">"passenger_count"</span>, <span class="st">"trip_distance"</span>])</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  .aggregate(</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    mean_tip <span class="op">=</span> _.tip_amount.mean(),</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    mean_fare <span class="op">=</span> _.fare_amount.mean()</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f412c0746d2b41628cf87cab9b544575","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┓
+┃<span style="font-weight: bold"> passenger_count </span>┃<span style="font-weight: bold"> trip_distance </span>┃<span style="font-weight: bold"> mean_tip </span>┃<span style="font-weight: bold"> mean_fare </span>┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━┩
+│ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">int64</span>           │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">float64</span>       │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">float64</span>  │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">float64</span>   │
+├─────────────────┼───────────────┼──────────┼───────────┤
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.80</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.753793</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">8.450206</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.20</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.386448</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">4.671193</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3.47</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.307350</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">12.758321</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">4.70</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.679448</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">15.728522</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2.70</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.162573</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">10.811488</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.80</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.878870</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">8.402046</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3.80</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.324273</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">13.787123</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.28</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.616118</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">6.737016</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │         <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">14.20</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">4.238410</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">38.186588</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2.20</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.871988</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">9.536184</span> │
+│               <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │             <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │        <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │         <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │
+└─────────────────┴───────────────┴──────────┴───────────┘
+</pre>
+</div>
+</div>
+<p>Note that, even though we have enabled the interactive print mode, we still get lazy evalation if we assign a chain of query steps to an object (here: <code>q3</code>)…</p>
+<div id="183a8f1a" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>q3 <span class="op">=</span> (</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  nyc</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  .group_by([<span class="st">"passenger_count"</span>, <span class="st">"trip_distance"</span>])</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  .agg(</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    mean_tip <span class="op">=</span> _.tip_amount.mean(),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    mean_fare <span class="op">=</span> _.fare_amount.mean()</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>… but printing the query to screen enforces computation.</p>
+<div id="097dce74" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>q3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"d4737ff84e294932a0bf64dabb7c87d7","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━┓
+┃<span style="font-weight: bold"> passenger_count </span>┃<span style="font-weight: bold"> trip_distance </span>┃<span style="font-weight: bold"> mean_tip </span>┃<span style="font-weight: bold"> mean_fare </span>┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━┩
+│ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">int64</span>           │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">float64</span>       │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">float64</span>  │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">float64</span>   │
+├─────────────────┼───────────────┼──────────┼───────────┤
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3.3</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.326239</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">12.390759</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.6</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.447695</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">4.717754</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.1</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.653059</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">6.333355</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3.9</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.150150</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">14.132481</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.2</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.688208</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">6.640748</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.3</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.720728</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">6.941542</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3.9</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.488901</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">13.855821</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3.0</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.250686</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11.611495</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">21.0</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5.529616</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">48.682804</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2.0</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.942336</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">8.932499</span> │
+│               <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │             <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │        <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │         <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │
+└─────────────────┴───────────────┴──────────┴───────────┘
+</pre>
+</div>
+</div>
+</section>
+<section id="pivot-reshape" class="level2">
+<h2 class="anchored" data-anchor-id="pivot-reshape">Pivot (reshape)</h2>
+<div id="e3d285e9" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># now chain on pivoting (and enforce computation via printing)</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  q3</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  .pivot_longer(s.r[<span class="st">"mean_tip"</span>:<span class="st">"mean_fare"</span>])</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/Users/floswald/git/grant/duckdb-polars/.venv/lib/python3.12/site-packages/ibis/selectors.py:82: FutureWarning: `r` is deprecated as of v9.5; use `ibis.selectors.index` instead
+  util.warn_deprecated(</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"f203c51a12bc40d486504d7268fd680c","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┳━━━━━━━━━━━┳━━━━━━━━━━━┓
+┃<span style="font-weight: bold"> passenger_count </span>┃<span style="font-weight: bold"> trip_distance </span>┃<span style="font-weight: bold"> name      </span>┃<span style="font-weight: bold"> value     </span>┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━╇━━━━━━━━━━━╇━━━━━━━━━━━┩
+│ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">int64</span>           │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">float64</span>       │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">string</span>    │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">float64</span>   │
+├─────────────────┼───────────────┼───────────┼───────────┤
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.0</span> │ <span style="color: #008000; text-decoration-color: #008000">mean_tip </span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.615529</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.0</span> │ <span style="color: #008000; text-decoration-color: #008000">mean_fare</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">6.012116</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.8</span> │ <span style="color: #008000; text-decoration-color: #008000">mean_tip </span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.414165</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.8</span> │ <span style="color: #008000; text-decoration-color: #008000">mean_fare</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5.470059</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.8</span> │ <span style="color: #008000; text-decoration-color: #008000">mean_tip </span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.534714</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.8</span> │ <span style="color: #008000; text-decoration-color: #008000">mean_fare</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5.360443</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">7.3</span> │ <span style="color: #008000; text-decoration-color: #008000">mean_tip </span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.850546</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">3</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">7.3</span> │ <span style="color: #008000; text-decoration-color: #008000">mean_fare</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">22.016939</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.4</span> │ <span style="color: #008000; text-decoration-color: #008000">mean_tip </span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.361255</span> │
+│               <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">0.4</span> │ <span style="color: #008000; text-decoration-color: #008000">mean_fare</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">4.173765</span> │
+│               <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │             <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span>         │         <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │
+└─────────────────┴───────────────┴───────────┴───────────┘
+</pre>
+</div>
+</div>
+</section>
+<section id="joins-merges" class="level2">
+<h2 class="anchored" data-anchor-id="joins-merges">Joins (merges)</h2>
+<p>(As we did in the <strong>dplyr</strong> code, we’ll break this contrived join example into two steps)</p>
+<div id="5399e386" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>mean_tips <span class="op">=</span> nyc.group_by(<span class="st">"month"</span>).agg(mean_tip <span class="op">=</span> _.tip_amount.mean())</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>mean_fares <span class="op">=</span> nyc.group_by(<span class="st">"month"</span>).agg(mean_fare <span class="op">=</span> _.fare_amount.mean())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b20c6b6d" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  mean_tips</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  .left_join(mean_fares, <span class="st">"month"</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"313e0e76c6514de9b1096b44567de54b","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre style="white-space:pre;overflow-x:auto;line-height:normal;font-family:Menlo,'DejaVu Sans Mono',consolas,'Courier New',monospace">┏━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━━┳━━━━━━━━━━━┓
+┃<span style="font-weight: bold"> month </span>┃<span style="font-weight: bold"> mean_tip </span>┃<span style="font-weight: bold"> month_right </span>┃<span style="font-weight: bold"> mean_fare </span>┃
+┡━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━━╇━━━━━━━━━━━┩
+│ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">int64</span> │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">float64</span>  │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">int64</span>       │ <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">float64</span>   │
+├───────┼──────────┼─────────────┼───────────┤
+│     <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">4</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.043167</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">4</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">10.335490</span> │
+│     <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.007817</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">9.813488</span> │
+│    <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">10</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.281239</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">10</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">12.501252</span> │
+│     <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.036874</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">2</span> │  <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">9.942640</span> │
+│    <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.250903</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">11</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">12.270138</span> │
+│     <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.078014</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">5</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">10.585157</span> │
+│     <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">9</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.254601</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">9</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">12.391198</span> │
+│     <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">7</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.059312</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">7</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">10.379943</span> │
+│     <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">8</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.079521</span> │           <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">8</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">10.492650</span> │
+│    <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">12</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">1.237651</span> │          <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">12</span> │ <span style="color: #008080; text-decoration-color: #008080; font-weight: bold">12.313953</span> │
+│     <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │        <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │           <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │         <span style="color: #7f7f7f; text-decoration-color: #7f7f7f">…</span> │
+└───────┴──────────┴─────────────┴───────────┘
+</pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script type="application/vnd.jupyter.widget-state+json">
+{"state":{"0e0edf4972614d169a1b50172823a0d1":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"ProgressStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":"black","description_width":""}},"17f78b031f9648a5a3211e4c03c6669f":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"ProgressStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":"black","description_width":""}},"313e0e76c6514de9b1096b44567de54b":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"FloatProgressModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"FloatProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"","description":"","description_allow_html":false,"layout":"IPY_MODEL_ac7367cd6d514b0091eab09851fc268b","max":100,"min":0,"orientation":"horizontal","style":"IPY_MODEL_8df91f625d614801b740fe2a265cada9","tabbable":null,"tooltip":null,"value":100}},"6e295307561548949ae43f26545dd71f":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"ProgressStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":"black","description_width":""}},"8df91f625d614801b740fe2a265cada9":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"ProgressStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":"black","description_width":""}},"9508640f3c454598be3ba0a1f1b44666":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":"auto"}},"ac7367cd6d514b0091eab09851fc268b":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":"auto"}},"b4abc5ebcd96423bb897ad02685d563a":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"FloatProgressModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"FloatProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"","description":"","description_allow_html":false,"layout":"IPY_MODEL_9508640f3c454598be3ba0a1f1b44666","max":100,"min":0,"orientation":"horizontal","style":"IPY_MODEL_0e0edf4972614d169a1b50172823a0d1","tabbable":null,"tooltip":null,"value":100}},"d0f0b3dd568b48e19410bc78722cb7cf":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":"auto"}},"d20301fd205942a7978b79962b824f2c":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"ProgressStyleModel","state":{"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"ProgressStyleModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"StyleView","bar_color":"black","description_width":""}},"d4737ff84e294932a0bf64dabb7c87d7":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"FloatProgressModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"FloatProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"","description":"","description_allow_html":false,"layout":"IPY_MODEL_f5cf3b8d77d8461f922a10bb554b8c1c","max":100,"min":0,"orientation":"horizontal","style":"IPY_MODEL_6e295307561548949ae43f26545dd71f","tabbable":null,"tooltip":null,"value":100}},"f203c51a12bc40d486504d7268fd680c":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"FloatProgressModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"FloatProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"","description":"","description_allow_html":false,"layout":"IPY_MODEL_d0f0b3dd568b48e19410bc78722cb7cf","max":100,"min":0,"orientation":"horizontal","style":"IPY_MODEL_d20301fd205942a7978b79962b824f2c","tabbable":null,"tooltip":null,"value":100}},"f412c0746d2b41628cf87cab9b544575":{"model_module":"@jupyter-widgets/controls","model_module_version":"2.0.0","model_name":"FloatProgressModel","state":{"_dom_classes":[],"_model_module":"@jupyter-widgets/controls","_model_module_version":"2.0.0","_model_name":"FloatProgressModel","_view_count":null,"_view_module":"@jupyter-widgets/controls","_view_module_version":"2.0.0","_view_name":"ProgressView","bar_style":"","description":"","description_allow_html":false,"layout":"IPY_MODEL_fe69451ea6f64712a3753b1969866bd4","max":100,"min":0,"orientation":"horizontal","style":"IPY_MODEL_17f78b031f9648a5a3211e4c03c6669f","tabbable":null,"tooltip":null,"value":100}},"f5cf3b8d77d8461f922a10bb554b8c1c":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":"auto"}},"fe69451ea6f64712a3753b1969866bd4":{"model_module":"@jupyter-widgets/base","model_module_version":"2.0.0","model_name":"LayoutModel","state":{"_model_module":"@jupyter-widgets/base","_model_module_version":"2.0.0","_model_name":"LayoutModel","_view_count":null,"_view_module":"@jupyter-widgets/base","_view_module_version":"2.0.0","_view_name":"LayoutView","align_content":null,"align_items":null,"align_self":null,"border_bottom":null,"border_left":null,"border_right":null,"border_top":null,"bottom":null,"display":null,"flex":null,"flex_flow":null,"grid_area":null,"grid_auto_columns":null,"grid_auto_flow":null,"grid_auto_rows":null,"grid_column":null,"grid_gap":null,"grid_row":null,"grid_template_areas":null,"grid_template_columns":null,"grid_template_rows":null,"height":null,"justify_content":null,"justify_items":null,"left":null,"margin":null,"max_height":null,"max_width":null,"min_height":null,"min_width":null,"object_fit":null,"object_position":null,"order":null,"overflow":null,"padding":null,"right":null,"top":null,"visibility":null,"width":"auto"}}},"version_major":2,"version_minor":0}
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/floswald\.github\.io\/duckdb-polars\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
