@@ -279,9 +279,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="what-is-a-database" class="level2">
 <h2 class="anchored" data-anchor-id="what-is-a-database">What is a Database?</h2>
-<p>You can think of a database as a collection of tables (or dataframes). In general, the benefit of databases is that they can handle very large amounts of data - data which not fit in your computer’s RAM. As such, most databases are stored on hard disk, from where data is read and written to.</p>
+<p>You can think of a database as a collection of tables (or dataframes). In general, the benefit of databases is that they can handle very large amounts of data - data which would not fit in your computer’s RAM. As such, most databases are stored on a hard disk, from where data is read and written to.</p>
 <p>There are many different forms of databases. We have several so-called database management systems (DBMS), which allow us to interact with each of them. Unhelpfully, each different flavor of database has a slightly different dialect of a what is called the <em>structured query language</em>, <strong>SQL</strong> for short. Helpfully, on the other hand, there are several packages out there which help us keeping the effort manageable by translating our queries. We will see a few of those here, and in different driving languages (i.e.&nbsp;<code>R</code>, <code>python</code> and <code>julia</code>).</p>
-<p>One final important feature of different databases is how (and where) they actually run. The more traditional solutions exist as server-client models, where you would start on a machine (could be your own) a database server, which interacts with the persistent storage (e.g.&nbsp;with your hard disk) to read and write data, and a client process, where you formulate so-called <em>queries</em>, and get back the results from the server. In some sense you formulate a question for the database in the client, you submit it to the database, and you get back an answer. Of course those server processes can run on dedicated and powerful machines, or directly in the cloud, where they are used to work with arbitrarily huge amounts of data.</p>
+<p>One final important feature of different databases is how (and where) they actually run. The more traditional solutions exist as server-client models, where you would start on a machine (could be your own) a database server, which interacts with the persistent storage (e.g.&nbsp;with your hard disk) to read and write data, and a client process, where you formulate so-called <em>queries</em>, and get back the results from the server. In some sense you formulate a question for the database in the client, you submit it to the database, and you get back an answer. Of course those server processes can run on dedicated and powerful machines which you can reach via a network, or directly in the cloud, where they are used to work with arbitrarily huge amounts of data.</p>
 <p>We will focus on a relatively recent addition to the database family called <a href="https://duckdb.org"><code>duckdb</code></a>. The main benefit (beyond it’s excellent performance) is that it is very easy to run a database <em>without</em> the need to set up the client-server structure. We will come to that in due course.</p>
 <section id="what-is-sql" class="level3">
 <h3 class="anchored" data-anchor-id="what-is-sql">What is <code>SQL</code></h3>
@@ -380,7 +380,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 # ℹ 1,645 more rows</code></pre>
 </div>
 </div>
-<p>That’s it for starters. There is now a whole world out there to learn in terms of SQL queries, database joins, pivots (i.e.&nbsp;reshape operations) etc. I leave you in the hands of Hadley Wickham and his <a href="https://r4ds.hadley.nz/databases">dedicated chapter</a> on this topic if you want to dive deeper. It will be almost unavoidable to learn some simple SQL, but hopefully it won’t be so bad. You will see in the associated pages of this tutorial that there are some very nice translation tools for <code>R</code>. Grant McDermott’s <a href="https://raw.githack.com/uo-ec607/lectures/master/16-databases/16-databases.html#Databases_101">intro to databases</a> is another valuable resource here.</p>
+<p>That’s it for starters. There is now a whole world out there to learn in terms of SQL queries, database joins, pivots (i.e.&nbsp;reshape operations) etc. I leave you in the hands of Hadley Wickham and his <a href="https://r4ds.hadley.nz/databases">dedicated chapter</a> on this topic if you want to dive deeper. It will be almost unavoidable to learn some simple SQL, but hopefully it won’t be so bad. You will see in the associated pages of this tutorial that there are some very nice translation tools for <code>R</code>. Grant’s <a href="https://raw.githack.com/uo-ec607/lectures/master/16-databases/16-databases.html#Databases_101">intro to databases</a> is another valuable resource here. Now, however, let’s get cracking with the real show, i.e.&nbsp;our big data set on NYC taxi rides.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># setup python from R with reticulate package</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate)</span>
@@ -496,7 +496,7 @@ Bigger than RAM data?
 </div>
 </div>
 </div>
-<p>Ok, well that is 1.7854432^{8}. 😬</p>
+<p>Ok, well that is 178,544,324. 😬</p>
 </section>
 <section id="first-example" class="level2">
 <h2 class="anchored" data-anchor-id="first-example">First example</h2>
