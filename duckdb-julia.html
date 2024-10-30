@@ -360,21 +360,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="st">    GROUP BY ALL</span></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="st">    ORDER BY ALL</span></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="op">|&gt;</span> DataFrame</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>2.112563917</code></pre>
+<pre><code>2.151580334</code></pre>
 </div>
 </div>
-<p>That took 2.11 seconds. Here is the result:</p>
+<p>That took 2.15 seconds. Here is the result:</p>
 <div id="10" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(dat1,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>5-element Vector{Any}:
- Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 0, mean_tip = 0.8620988141424253)
- Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 1, mean_tip = 1.151010961548749)
- Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 2, mean_tip = 1.0815798424004937)
- Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 3, mean_tip = 0.9629493657893462)
- Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 4, mean_tip = 0.844518978965985)</code></pre>
+<div><div style="float: left;"><span>5×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">passenger_count</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">mean_tip</th>
+</tr>
+<tr class="odd subheader headerLastRow">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.862099</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1.15101</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">1.08158</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.962949</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.844519</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 </section>
@@ -382,37 +419,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="more-aggregation">More Aggregation</h2>
 <p>Let’s try out some more aggregation queries. How about a slightly variation on a our first example query, where we (a) add “month” as a second grouping variable, and (b) subset to only the first three months of the year.</p>
 <div id="12" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>time2 <span class="op">=</span> <span class="pp">@elapsed</span> dat1 <span class="op">=</span> DBInterface.<span class="fu">execute</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    con,</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM 'nyc-taxi/**/*.parquet'</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="st">        passenger_count,</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="st">        AVG(tip_amount) AS mean_tip</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE month &lt;= 3</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="st">    GROUP BY ALL</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>time2 <span class="op">=</span> <span class="pp">@elapsed</span> dat1 <span class="op">=</span> DBInterface.<span class="fu">execute</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    con,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM 'nyc-taxi/**/*.parquet'</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="st">        passenger_count,</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="st">        AVG(tip_amount) AS mean_tip</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE month &lt;= 3</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="st">    GROUP BY ALL</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>0.533458958</code></pre>
+<pre><code>0.554095084</code></pre>
 </div>
 </div>
-<p>This time we clocked up 0.53 seconds - keep in mind that this is <em>a lot</em> of data to go through each time.</p>
+<p>This time we clocked up 0.55 seconds - keep in mind that this is <em>a lot</em> of data to go through each time.</p>
 </section>
 <section id="julia-specifics-register_data_frame" class="level2">
 <h2 class="anchored" data-anchor-id="julia-specifics-register_data_frame">Julia Specifics: <code>register_data_frame</code></h2>
 <p>One cool thing about the julia package is that you can <em>register</em> a local dataframe into the database, which means that there is <em>no copy oepration</em> performed. Duckdb will directly read that julia dataframe instead:</p>
 <div id="14" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>DuckDB.<span class="fu">register_data_frame</span>(con, dat1, <span class="st">"dat1_on_db"</span>)</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># let's read the first row back out just to check</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> DBInterface.<span class="fu">execute</span>(con, </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT * FROM dat1_on_db</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="st">    LIMIT 1</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="fu">DataFrame</span>(results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>DuckDB.<span class="fu">register_data_frame</span>(con, dat1, <span class="st">"dat1_on_db"</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># let's read the first row back out just to check</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> DBInterface.<span class="fu">execute</span>(con, </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT * FROM dat1_on_db</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="st">    LIMIT 1</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">DataFrame</span>(results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>1×2 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -431,8 +468,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
-<td style="text-align: right;">2</td>
-<td style="text-align: right;">0.988684</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">0.795176</td>
 </tr>
 </tbody>
 </table>
@@ -444,14 +481,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="julia-specifics-appender">Julia Specifics: <code>Appender</code></h2>
 <p>The <a href="https://duckdb.org/docs/data/appender.html">appender</a> is an advanced duckdb feature which is optimized for fast row insertion into a database table. This feature is not available in neither <code>R</code> nor <code>python</code> packages. Here is an example. Let’s first create a new dataframe in your julia session and then read it row by row into an empty database table.</p>
 <div id="16" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ndf <span class="op">=</span> <span class="fl">100_000</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>        id        <span class="op">=</span> <span class="fu">collect</span>(<span class="fl">1</span><span class="op">:</span>ndf),</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        value     <span class="op">=</span> <span class="fu">rand</span>(<span class="dt">Float32</span>,ndf),</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>        timestamp <span class="op">=</span> <span class="bu">Dates</span>.<span class="fu">now</span>() <span class="op">+</span> <span class="bu">Dates</span>.<span class="fu">Second</span>.(<span class="fl">1</span><span class="op">:</span>ndf),</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        date      <span class="op">=</span> <span class="bu">Dates</span>.<span class="fu">today</span>() <span class="op">+</span> <span class="bu">Dates</span>.<span class="fu">Day</span>.(<span class="fl">1</span><span class="op">:</span>ndf)</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(df,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>ndf <span class="op">=</span> <span class="fl">100_000</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> <span class="fu">DataFrame</span>(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>        id        <span class="op">=</span> <span class="fu">collect</span>(<span class="fl">1</span><span class="op">:</span>ndf),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>        value     <span class="op">=</span> <span class="fu">rand</span>(<span class="dt">Float32</span>,ndf),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>        timestamp <span class="op">=</span> <span class="bu">Dates</span>.<span class="fu">now</span>() <span class="op">+</span> <span class="bu">Dates</span>.<span class="fu">Second</span>.(<span class="fl">1</span><span class="op">:</span>ndf),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        date      <span class="op">=</span> <span class="bu">Dates</span>.<span class="fu">today</span>() <span class="op">+</span> <span class="bu">Dates</span>.<span class="fu">Day</span>.(<span class="fl">1</span><span class="op">:</span>ndf)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(df,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <div><div style="float: left;"><span>5×4 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame caption-top table table-sm table-striped small" data-quarto-postprocess="true">
@@ -475,36 +512,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.762181</td>
-<td style="text-align: left;">2024-10-30T22:01:04.488</td>
+<td style="text-align: right;">0.689282</td>
+<td style="text-align: left;">2024-10-30T22:06:49.044</td>
 <td style="text-align: left;">2024-10-31</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.34478</td>
-<td style="text-align: left;">2024-10-30T22:01:05.488</td>
+<td style="text-align: right;">0.620124</td>
+<td style="text-align: left;">2024-10-30T22:06:50.044</td>
 <td style="text-align: left;">2024-11-01</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.285909</td>
-<td style="text-align: left;">2024-10-30T22:01:06.488</td>
+<td style="text-align: right;">0.17992</td>
+<td style="text-align: left;">2024-10-30T22:06:51.044</td>
 <td style="text-align: left;">2024-11-02</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.657292</td>
-<td style="text-align: left;">2024-10-30T22:01:07.488</td>
+<td style="text-align: right;">0.21845</td>
+<td style="text-align: left;">2024-10-30T22:06:52.044</td>
 <td style="text-align: left;">2024-11-03</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
 <td style="text-align: right;">5</td>
-<td style="text-align: right;">0.322498</td>
-<td style="text-align: left;">2024-10-30T22:01:08.488</td>
+<td style="text-align: right;">0.586971</td>
+<td style="text-align: left;">2024-10-30T22:06:53.044</td>
 <td style="text-align: left;">2024-11-04</td>
 </tr>
 </tbody>
@@ -514,72 +551,72 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>create a new database with an empty table called <code>test_table1</code>:</p>
 <div id="18" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>db <span class="op">=</span> DuckDB.<span class="fu">DB</span>()</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>DBInterface.<span class="fu">execute</span>(db,</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="st">    CREATE OR REPLACE TABLE </span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="st">    test_table1(id INTEGER PRIMARY KEY, value FLOAT, timestamp TIMESTAMP, date DATE)</span></span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>db <span class="op">=</span> DuckDB.<span class="fu">DB</span>()</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>DBInterface.<span class="fu">execute</span>(db,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="st">    CREATE OR REPLACE TABLE </span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="st">    test_table1(id INTEGER PRIMARY KEY, value FLOAT, timestamp TIMESTAMP, date DATE)</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>(Count = Int64[],)</code></pre>
 </div>
 </div>
 <p>Now let us prepare a SQL statement, into which we will repeatedly insert the row for each data. This makes use of the <em>positional parameters</em> <code>?</code>:</p>
 <div id="20" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>stmt <span class="op">=</span> DBInterface.<span class="fu">prepare</span>(db, </span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="st">    INSERT INTO test_table1 VALUES(?,?,?,?)</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>stmt <span class="op">=</span> DBInterface.<span class="fu">prepare</span>(db, </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="st">    INSERT INTO test_table1 VALUES(?,?,?,?)</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>DuckDB.Stmt(DuckDB.Connection(":memory:"), Ptr{Nothing} @0x0000000125e10660, "INSERT INTO test_table1 VALUES(?,?,?,?)\n", DuckDB.MaterializedResult)</code></pre>
+<pre><code>DuckDB.Stmt(DuckDB.Connection(":memory:"), Ptr{Nothing} @0x0000000110ff7420, "INSERT INTO test_table1 VALUES(?,?,?,?)\n", DuckDB.MaterializedResult)</code></pre>
 </div>
 </div>
 <p>We are ready to time this now.</p>
 <div id="22" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="cn">e</span> <span class="op">=</span> <span class="pp">@elapsed</span> res <span class="op">=</span> </span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">begin</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> r <span class="kw">in</span> <span class="fu">eachrow</span>(df)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>            DBInterface.<span class="fu">execute</span>(stmt, </span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>                (r.id, r.value, r.timestamp, r.date)</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>            )</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        DBInterface.<span class="fu">close!</span>(stmt)  <span class="co"># close statement when done</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="cn">e</span> <span class="op">=</span> <span class="pp">@elapsed</span> res <span class="op">=</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">begin</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> r <span class="kw">in</span> <span class="fu">eachrow</span>(df)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>            DBInterface.<span class="fu">execute</span>(stmt, </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>                (r.id, r.value, r.timestamp, r.date)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>        DBInterface.<span class="fu">close!</span>(stmt)  <span class="co"># close statement when done</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>31.793386792</code></pre>
+<pre><code>33.035374417</code></pre>
 </div>
 </div>
-<p>On my machine this took 31.79 seconds. This is probably not the most efficient way to get data into your database, but it could happen (if you create the data yourself from some modeling task, for example).</p>
+<p>On my machine this took 33.04 seconds. This is probably not the most efficient way to get data into your database, but it could happen (if you create the data yourself from some modeling task, for example).</p>
 <p>Now, let’s try with the <code>Appender</code> API. We create an identical table, and attach an <code>Appender</code> object to it:</p>
 <div id="24" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>DBInterface.<span class="fu">execute</span>(db,</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CREATE OR REPLACE TABLE </span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">test_table2</span>(id INTEGER PRIMARY KEY, value FLOAT, timestamp TIMESTAMP, date DATE)<span class="st">")</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># create an appender on the second table</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>appender <span class="op">=</span> DuckDB.<span class="fu">Appender</span>(db, <span class="st">"test_table2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>DBInterface.<span class="fu">execute</span>(db,</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"CREATE OR REPLACE TABLE </span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">test_table2</span>(id INTEGER PRIMARY KEY, value FLOAT, timestamp TIMESTAMP, date DATE)<span class="st">")</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="co"># create an appender on the second table</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>appender <span class="op">=</span> DuckDB.<span class="fu">Appender</span>(db, <span class="st">"test_table2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>DuckDB.Appender(Ptr{Nothing} @0x0000000132f63e60)</code></pre>
+<pre><code>DuckDB.Appender(Ptr{Nothing} @0x00000001045e4340)</code></pre>
 </div>
 </div>
 <p>let’s see how fast that insert operation is now:</p>
 <div id="26" class="cell" data-execution_count="1">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>e2 <span class="op">=</span> <span class="pp">@elapsed</span> <span class="cf">begin</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachrow</span>(df)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> i</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>            DuckDB.<span class="fu">append</span>(appender, j)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    DuckDB.<span class="fu">end_row</span>(appender)</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    DuckDB.<span class="fu">close</span>(appender)  <span class="co"># done now</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>e2 <span class="op">=</span> <span class="pp">@elapsed</span> <span class="cf">begin</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="fu">eachrow</span>(df)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> i</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>            DuckDB.<span class="fu">append</span>(appender, j)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">end</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    DuckDB.<span class="fu">end_row</span>(appender)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    DuckDB.<span class="fu">close</span>(appender)  <span class="co"># done now</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>0.205426125</code></pre>
+<pre><code>0.179672166</code></pre>
 </div>
 </div>
-<p>Now only 0.21 seconds only! Holy smokes.</p>
+<p>Now only 0.18 seconds only! Holy smokes.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -591,11 +628,11 @@ Meta Info
 </div>
 <div class="callout-body-container callout-body">
 <p>For the purpose of working with this notebook, we can currently only have a single quarto <code>engine</code> per notebook. While it’s perfectly possible to call both <code>R</code> and <code>python</code> code from a running <code>julia</code> session, one needs to annotate the code with some additional markup, which is not great for a learner. So I prefered to separate the julia version from the others. It’s most useful to create a local environment. To achieve this, you can open julia in the root of this document and do</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>] activate .  <span class="co"># activate current dir in Pkg mode</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>add DuckDB</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>add DataFrames</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>add <span class="bu">Dates</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>add Chain</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>] activate .  <span class="co"># activate current dir in Pkg mode</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>add DuckDB</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>add DataFrames</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>add <span class="bu">Dates</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>add Chain</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>and quarto will pick up this env when it sees <code>engine: julia</code> in the frontmatter.</p>
 </div>
 </div>
