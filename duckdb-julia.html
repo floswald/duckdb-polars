@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Florian Oswald">
-<meta name="dcterms.date" content="2024-10-29">
+<meta name="dcterms.date" content="2024-10-30">
 
 <title>DuckDB in Julia – (Clone of) DuckDB + Polars</title>
 <style>
@@ -259,17 +259,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="quarto-title-meta-author">
   <div class="quarto-title-meta-heading">Author</div>
-  <div class="quarto-title-meta-heading">Affiliations</div>
+  <div class="quarto-title-meta-heading">Affiliation</div>
   
     <div class="quarto-title-meta-contents">
-    <p class="author"><a href="https://floswald.github.io">Florian Oswald</a> <a href="mailto:florian.oswald@unito.it" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0001-7737-2038" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+    <p class="author"><a href="https://floswald.github.io">Florian Oswald</a> <a href="mailto:florian.oswald@gmail.com" class="quarto-title-author-email"><i class="bi bi-envelope"></i></a> <a href="https://orcid.org/0000-0001-7737-2038" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
   </div>
   <div class="quarto-title-meta-contents">
         <p class="affiliation">
             University of Turin
-          </p>
-        <p class="affiliation">
-            SciencesPo Paris (on leave)
           </p>
       </div>
   </div>
@@ -280,7 +277,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">October 29, 2024</p>
+      <p class="date">October 30, 2024</p>
     </div>
   </div>
   
@@ -365,19 +362,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>6.27071575</code></pre>
+<pre><code>2.112563917</code></pre>
 </div>
 </div>
-<p>That took 6.27 seconds. Here is the result:</p>
+<p>That took 2.11 seconds. Here is the result:</p>
 <div id="10" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(dat1,<span class="fl">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>5-element Vector{Any}:
- Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 0, mean_tip = 0.8620988141425049)
- Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 1, mean_tip = 1.1510109615234965)
- Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 2, mean_tip = 1.081579842401206)
- Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 3, mean_tip = 0.9629493657893194)
- Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 4, mean_tip = 0.8445189789663262)</code></pre>
+ Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 0, mean_tip = 0.8620988141424253)
+ Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 1, mean_tip = 1.151010961548749)
+ Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 2, mean_tip = 1.0815798424004937)
+ Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 3, mean_tip = 0.9629493657893462)
+ Tables.ColumnsRow{Tables.CopiedColumns{@NamedTuple{passenger_count::Vector{Int64}, mean_tip::Vector{Float64}}}}: (passenger_count = 4, mean_tip = 0.844518978965985)</code></pre>
 </div>
 </div>
 </section>
@@ -397,10 +394,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>1.556352459</code></pre>
+<pre><code>0.533458958</code></pre>
 </div>
 </div>
-<p>This time we clocked up 1.56 seconds - keep in mind that this is <em>a lot</em> of data to go through each time.</p>
+<p>This time we clocked up 0.53 seconds - keep in mind that this is <em>a lot</em> of data to go through each time.</p>
 </section>
 <section id="julia-specifics-register_data_frame" class="level2">
 <h2 class="anchored" data-anchor-id="julia-specifics-register_data_frame">Julia Specifics: <code>register_data_frame</code></h2>
@@ -434,8 +431,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tbody>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1.0655</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">0.988684</td>
 </tr>
 </tbody>
 </table>
@@ -478,37 +475,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
 <td style="text-align: right;">1</td>
-<td style="text-align: right;">0.40374</td>
-<td style="text-align: left;">2024-10-29T22:43:07.086</td>
-<td style="text-align: left;">2024-10-30</td>
+<td style="text-align: right;">0.762181</td>
+<td style="text-align: left;">2024-10-30T22:01:04.488</td>
+<td style="text-align: left;">2024-10-31</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
 <td style="text-align: right;">2</td>
-<td style="text-align: right;">0.00279289</td>
-<td style="text-align: left;">2024-10-29T22:43:08.086</td>
-<td style="text-align: left;">2024-10-31</td>
+<td style="text-align: right;">0.34478</td>
+<td style="text-align: left;">2024-10-30T22:01:05.488</td>
+<td style="text-align: left;">2024-11-01</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
 <td style="text-align: right;">3</td>
-<td style="text-align: right;">0.346249</td>
-<td style="text-align: left;">2024-10-29T22:43:09.086</td>
-<td style="text-align: left;">2024-11-01</td>
+<td style="text-align: right;">0.285909</td>
+<td style="text-align: left;">2024-10-30T22:01:06.488</td>
+<td style="text-align: left;">2024-11-02</td>
 </tr>
 <tr class="even">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
 <td style="text-align: right;">4</td>
-<td style="text-align: right;">0.950927</td>
-<td style="text-align: left;">2024-10-29T22:43:10.086</td>
-<td style="text-align: left;">2024-11-02</td>
+<td style="text-align: right;">0.657292</td>
+<td style="text-align: left;">2024-10-30T22:01:07.488</td>
+<td style="text-align: left;">2024-11-03</td>
 </tr>
 <tr class="odd">
 <td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
 <td style="text-align: right;">5</td>
-<td style="text-align: right;">0.875765</td>
-<td style="text-align: left;">2024-10-29T22:43:11.086</td>
-<td style="text-align: left;">2024-11-03</td>
+<td style="text-align: right;">0.322498</td>
+<td style="text-align: left;">2024-10-30T22:01:08.488</td>
+<td style="text-align: left;">2024-11-04</td>
 </tr>
 </tbody>
 </table>
@@ -536,7 +533,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>DuckDB.Stmt(DuckDB.Connection(":memory:"), Ptr{Nothing} @0x00000001467995a0, "INSERT INTO test_table1 VALUES(?,?,?,?)\n", DuckDB.MaterializedResult)</code></pre>
+<pre><code>DuckDB.Stmt(DuckDB.Connection(":memory:"), Ptr{Nothing} @0x0000000125e10660, "INSERT INTO test_table1 VALUES(?,?,?,?)\n", DuckDB.MaterializedResult)</code></pre>
 </div>
 </div>
 <p>We are ready to time this now.</p>
@@ -551,10 +548,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        DBInterface.<span class="fu">close!</span>(stmt)  <span class="co"># close statement when done</span></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>17.78447875</code></pre>
+<pre><code>31.793386792</code></pre>
 </div>
 </div>
-<p>On my machine this took 17.78 seconds. This is probably not the most efficient way to get data into your database, but it could happen (if you create the data yourself from some modeling task, for example).</p>
+<p>On my machine this took 31.79 seconds. This is probably not the most efficient way to get data into your database, but it could happen (if you create the data yourself from some modeling task, for example).</p>
 <p>Now, let’s try with the <code>Appender</code> API. We create an identical table, and attach an <code>Appender</code> object to it:</p>
 <div id="24" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>DBInterface.<span class="fu">execute</span>(db,</span>
@@ -564,7 +561,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># create an appender on the second table</span></span>
 <span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>appender <span class="op">=</span> DuckDB.<span class="fu">Appender</span>(db, <span class="st">"test_table2"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>DuckDB.Appender(Ptr{Nothing} @0x00000001170f33e0)</code></pre>
+<pre><code>DuckDB.Appender(Ptr{Nothing} @0x0000000132f63e60)</code></pre>
 </div>
 </div>
 <p>let’s see how fast that insert operation is now:</p>
@@ -579,10 +576,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    DuckDB.<span class="fu">close</span>(appender)  <span class="co"># done now</span></span>
 <span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="1">
-<pre><code>0.227146958</code></pre>
+<pre><code>0.205426125</code></pre>
 </div>
 </div>
-<p>Now only 0.23 seconds only! Holy smokes.</p>
+<p>Now only 0.21 seconds only! Holy smokes.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
