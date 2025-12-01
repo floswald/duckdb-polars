@@ -1,8 +1,9 @@
 ---
 title: (Pretty) big data wrangling with DuckDB and Polars
-subtitle: With examples in R and Python
+subtitle: With examples in R, Python and Julia
 format:
-  clean-revealjs:
+  revealjs:
+    theme: _extensions/grantmcdermott/clean/clean.scss
     self-contained: true
 author:
   - name: Grant McDermott
@@ -11,11 +12,37 @@ author:
     affiliations:
       - Principal Economist, Amazon
     orcid: 0000-0001-7883-8573
+  - name: Florian Oswald
+    url: https://floswald.github.io
+    email: florian.oswald@unito.it
+    orcid: 0000-0001-7737-2038
+    affiliations:
+      - University of Turin
+      - Collegio Carlo Alberto
+      - JPE Data Editor
 date: May 2, 2024
 # date: last-modified
 execute: 
   cache: true
 ---
+
+## Preliminaries
+
+::: {.callout-warning}
+
+# Credits
+
+Grant did not *coauthor* those slides with me, as one could imagine from the first slide. Rather, he did most of the work for his workshop in 2024, I keep making updates and additions. Thanks Grant.
+
+:::
+
+As clearly indicated on the landing page of this website:
+
+> Notice this material was originally developed by Grant McDermott for the Workshops for Ukraine Series. Check out the material here 
+> **Website:** https://grantmcdermott.com/duckdb-polars
+
+
+
 
 ## Preliminaries
 
@@ -28,14 +55,14 @@ These sparse slides are mostly intended to serve as a rough guide map.
 
 **Note:** All of the material for today's workshop are available on my website:
 
-- **<https://grantmcdermott.com/duckdb-polars>**
+- **<https://floswald.github.io/duckdb-polars>**
 
 ## Preliminaries
 
 ### Requirements
 
 **Important:** Before continuing, please make sure that you have completed the
-[requirements](https://grantmcdermott.com/duckdb-polars/requirements.html)
+[requirements](https://floswald.github.io/duckdb-polars/requirements.html)
 listed on the workshop website.
 
 - Install the required R and/or Python libraries.
@@ -87,9 +114,9 @@ nyc_summ = nyc |>
 ## Taster
 ### DuckDB example (cont.)
 
-We just read a ~180 million row dataset (from disk!) and did a group-by aggregation on it. 
+We just read a ~570 million row dataset (from disk!) and did a group-by aggregation on it. 
 
-In < 1 second. 
+In about 1.5 seconds.
 
 On a laptop.
 
@@ -286,6 +313,7 @@ Let's head back to the website to work through some notebooks.
 
  - [DuckDB SQL](../duckdb-sql.qmd)
  - [DuckDB + dplyr (R)](../duckdb-dplyr.qmd)
+ - [DuckDB + julia](../duckdb-julia.qmd)
  - [DuckDB + Ibis (Python)](../duckdb-ibis.qmd)
 
 #### Polars

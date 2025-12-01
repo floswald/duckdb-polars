@@ -14,10 +14,12 @@ My working assumption is that you have already cloned the
 [companion GitHub repo](https://github.com/floswald/duckdb-polars)
 to this website. If not, please do so before continuing and navigate to the
 root of your local clone, using the following commands.
+
 ```sh
 git clone https://github.com/floswald/duckdb-polars.git
-cd duckdb-polars
+cd duckdb-polars # go into repo
 ```
+
 (Don't worry if you can't clone the repo for some reason. You may need to adjust
 some relative file paths when you are calling the actual code chunks later in
 the workshop, but we'll figure it out.) 
@@ -107,6 +109,26 @@ python3 -m pip install duckdb polars pyarrow pandas matplotlib yaml -U
 python3 -m pip install 'ibis-framework[duckdb,polars]' -U
 ```
 
+## `pyenv`
+
+[pyenv](https://github.com/pyenv/pyenv) is a simple pyenv version manager which also comes with a virtualenv functionality.
+
+1. follow instructions to install pyenv
+2. install a pythoen version with shared enabled: `env PYTHON_CONFIGURE_OPTS="--enable-shared" pyenv install 3.13.5`
+3. create a virtualenv based on that installation
+```
+pyenv virtualenv 3.13.5 PyR
+```
+4. install all required python libraries into that env and make sure it's activated in the current dir
+```
+pyenv local PyR
+# or do pyenv activate PyR
+```
+
+
+
+
+
 ::: {.callout-caution}
 ## VS Code
 If you are using VS Code, then there are a few tweaks to this Python setup.
@@ -167,8 +189,8 @@ For this workshop, we'll make use of the ~~infamous~~ well-known
 [New York City taxi](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
 data. 
 
-- We'll just be downloading a single year's worth of data from 2012. But that will be enough to demonstrate the point and it's of comparable size to the "typical" dataset that I work with.
-- The final dataset is ~8.5 GB compressed on disk and can take 10-20 minutes to download, depending on your internet connection.
+The original dataset below from `voltrondata` is no longer available. So I looked for another source. It does not really matter how many years you download, the more, the bigger your big data will be. We'll download 4 years worth of taxi data.
+
 
 You can download the dataset with the below terminal commands.
 
@@ -180,31 +202,42 @@ do _not_ need a AWS account), but see further below for some alternative
 download options.
 :::
 
+Let's create a folder somewhere on your computer to store the taxi data: 
+
 ```sh
-mkdir -p nyc-taxi/year=2012
-aws s3 cp s3://voltrondata-labs-datasets/nyc-taxi/year=2012 nyc-taxi/year=2012 --recursive --no-sign-request
+mkdir nyc-taxi
+aws s3 cp s3://ursa-labs-taxi-data/2009 nyc-taxi/ --recursive --no-sign-request
+aws s3 cp s3://ursa-labs-taxi-data/2010 nyc-taxi/ --recursive --no-sign-request
+aws s3 cp s3://ursa-labs-taxi-data/2011 nyc-taxi/ --recursive --no-sign-request
+aws s3 cp s3://ursa-labs-taxi-data/2012 nyc-taxi/ --recursive --no-sign-request
 ```
 
-Besides being relatively chonky (8.6Gb), there are two features of this dataset that
+Besides being relatively chonky (17Gb), there are two features of this dataset that
 we'll come back to since they are key to our workflow:
 
 - The data are stored in `.parquet` file format.
-- These Parquet files are organised in so-called ["Hive-style" partitions](https://duckdb.org/docs/data/partitioning/hive_partitioning.html) on disk.
+- These Parquet files are *no longer* organised in so-called ["Hive-style" partitions](https://duckdb.org/docs/data/partitioning/hive_partitioning.html) on disk. unfortunately.
+- Let's make it a hive dataset again:
 
-### Other data options
-
-#### Smaller subsets of the data
-
-If you're pressed for time and/or disk space, feel free to only grab a subset of
-the data manually. But make sure that you preserve the Hive-style partitioning.
-Here's a quick example of how to do it for the first two months. 
 
 ```sh
-mkdir -p nyc-taxi/year=2012/month=1
-mkdir -p nyc-taxi/year=2012/month=2
-aws s3 cp s3://voltrondata-labs-datasets/nyc-taxi/year=2012/month=1/ nyc-taxi/year=2012/month=1 --recursive --no-sign-request
-aws s3 cp s3://voltrondata-labs-datasets/nyc-taxi/year=2012/month=2/ nyc-taxi/year=2012/month=2 --recursive --no-sign-request
+# on your bash shell
+cd nyc-taxi
+for year in */; do (cd "$year" && for d in [0-1][0-9]; do mv "$d" "month=$d"; done); done
 ```
+
+```sh
+# on your fish
+for year in */
+    cd $year
+    and for d in */
+        test -d $d
+        and mv $d month=(basename $d)
+    end
+    cd ..
+end
+```
+
 
 #### Alternative download options
 
@@ -216,10 +249,10 @@ some of the packages that we installed above. For example:
 library(arrow)
 library(dplyr)
 
-data_path = "nyc-taxi/year=2012" # Or set your own preferred path
+data_path = "nyc-taxi/2010" # Or set your own preferred path
 
-open_dataset("s3://voltrondata-labs-datasets/nyc-taxi/year=2012") |>
-    write_dataset(data_path, partitioning = "month")
+open_dataset("s3://ursa-labs-taxi-data/2010") |>
+    write_dataset(data_path, partition = "month")
 ```
 
 Be forewarned that these alternative download approaches are going to be slower

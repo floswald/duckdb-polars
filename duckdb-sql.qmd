@@ -93,7 +93,7 @@ is another valuable resource here. Now, however, let's get cracking with the rea
 #| cache: false
 # setup python from R with reticulate package
 library(reticulate)
-Sys.setenv(RETICULATE_PYTHON=here::here(".venv/bin/python"))
+Sys.setenv(RETICULATE_PYTHON="/Users/floswald/.pyenv/versions/3.13.5/bin/python")
 
 ```
 
@@ -390,7 +390,7 @@ dat2 = dbGetQuery(
     month,
     passenger_count,
     AVG(tip_amount) AS mean_tip
-  WHERE month <= 3
+  WHERE month::int <= 3
   GROUP BY ALL
   "
     )
@@ -413,7 +413,7 @@ dat2 = (
       month,
       passenger_count,
       AVG(tip_amount) AS mean_tip
-    WHERE month <= 3
+    WHERE month::int <= 3
     GROUP BY ALL
     '''
   )
@@ -448,7 +448,7 @@ dbGetQuery(
       month,
       passenger_count,
       AVG(tip_amount) AS mean_tip
-    WHERE month <= 3
+    WHERE month::int <= 3
     GROUP BY ALL
   "
 )
@@ -465,7 +465,7 @@ con.query(
       month,
       passenger_count,
       AVG(tip_amount) AS mean_tip
-    WHERE month <= 3
+    WHERE month::int <= 3
     GROUP BY ALL
   '''
 )

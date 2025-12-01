@@ -24,7 +24,7 @@ from ibis import _
 con = ibis.duckdb.connect()
 
 ## Register our parquet dataset as a table called "nyc" in our connection
-con.register("nyc-taxi/**/*.parquet", "nyc")
+con.read_parquet("nyc-taxi/**/*.parquet", table_name = "nyc")
 ```
 
 Aside: Remember that you can create a persistent, disk-backed database by giving it an
@@ -137,10 +137,12 @@ q3
 ```{python db_ibis_pivot}
 
 # now chain on pivoting (and enforce computation via printing)
-(
-  q3
-  .pivot_longer(s.r["mean_tip":"mean_fare"])
+long = q3.pivot_longer(
+    ["mean_tip", "mean_fare"],   # columns to pivot
+    names_to="metric",
+    values_to="value",
 )
+long
 ```
 
 ## Joins (merges)

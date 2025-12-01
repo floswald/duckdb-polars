@@ -9,7 +9,7 @@ execute:
 ```{r reticulate_config}
 #| cache: false
 #| include: false
-Sys.setenv(RETICULATE_PYTHON=here::here(".venv/bin/python"))
+Sys.setenv(RETICULATE_PYTHON="/Users/floswald/.pyenv/versions/3.13.5/bin/python")
 options(polars.df_knitr_print = "html")
 ```
 
@@ -83,7 +83,7 @@ q1 = (
     nyc
     $group_by("passenger_count")
     $agg(
-        pl$mean("tip_amount")#$alias("mean_tip") ## alias is optional
+        pl$col("tip_amount")$mean()
     )
     $sort("passenger_count")
 )
@@ -99,7 +99,7 @@ Polars-style `x$method1()$method2()...` chaining may seem a little odd to R user
 nyc$group_by(
     "passenger_count"
 )$agg(
-    pl$mean("tip_amount")
+    pl$col("tip_amount")$mean()$alias("mean_tip")
 )$sort("passenger_count")
 ```
 ::::
@@ -163,7 +163,7 @@ q2 = (
     nyc
     $filter(pl$col("month") <= 3)
     $group_by("month", "passenger_count")
-    $agg(pl$mean("tip_amount")$alias("mean_tip"))
+    $agg(pl$col("tip_amount")$mean()$alias("mean_tip"))
     $sort("passenger_count")
 ) 
 ```
@@ -253,8 +253,8 @@ q3 = (
     nyc
     $group_by("passenger_count", "trip_distance")
     $agg(
-        pl$mean("tip_amount")$alias("mean_tip"),
-        pl$mean("fare_amount")$alias("mean_fare")
+        pl$col("tip_amount")$mean()$alias("mean_tip"),
+        pl$col("tip_amount")$mean()$alias("mean_fare")
         )
     $sort("passenger_count", "trip_distance")
 )
@@ -392,7 +392,7 @@ from ibis import _
 ##! This next line is the only thing that's changed !##
 con = ibis.polars.connect()
 
-con.register("nyc-taxi/**/*.parquet", "nyc")
+con.read_parquet("nyc-taxi/**/*.parquet", table_name = "nyc")
 
 nyc = con.table("nyc")
 

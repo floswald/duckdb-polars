@@ -89,10 +89,48 @@ dat1
 toc - tic
 ```
 
+
+Oh. Well that was *fast*. But also, what are those negative passenger counts? Must be corrupt data. Let's filter those out.
+
+```{r dbplyr_q1filter}
+q1 = nyc |>
+  filter(passenger_count > 0) |>
+  summarize(
+    mean_tip = mean(tip_amount),
+    .by = passenger_count
+  )
+```
+
+```{r dbplyr_q1_collect_filtered}
+
+dat1 = collect(q1)
+dat1
+
+```
+
+
+ok much better.
+
 ```{r dbplyr_dat_time}
 #| include: false
 dat1_time = sprintf("%.2f", toc - tic)
 ```
+
+## Viewing Data
+
+Let's figure out what column names we have stored in this data set:
+
+```{r}
+colnames(nyc)
+```
+
+Notice that we cannot on the R side do things which require scanning the entire database table:
+
+```{r}
+nrow(nyc)
+```
+
+
 
 ## Aggregation
 
@@ -101,10 +139,10 @@ variables...
 
 ```{r dbplyr_q2}
 q2 = nyc |>
-  filter(month <= 3) |>
+  filter(as.numeric(month) <= 3) |>
   summarize(
     across(c(tip_amount, fare_amount), mean),
-    .by = c(month, passenger_count)
+    .by = c(month,passenger_count)
   )
 q2
 ```

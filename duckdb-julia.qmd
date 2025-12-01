@@ -114,7 +114,7 @@ time2 = @elapsed dat1 = DBInterface.execute(
 	SELECT
 		passenger_count,
 		AVG(tip_amount) AS mean_tip
-    WHERE month <= 3
+    WHERE month::int <= 3
 	GROUP BY ALL
 	"""
 	)
