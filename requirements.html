@@ -356,11 +356,11 @@ Note
 </div>
 </div>
 <p>Let’s create a folder somewhere on your computer to store the taxi data:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> nyc-taxi</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> s3 cp s3://ursa-labs-taxi-data/2009 nyc-taxi/ <span class="at">--recursive</span> <span class="at">--no-sign-request</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> s3 cp s3://ursa-labs-taxi-data/2010 nyc-taxi/ <span class="at">--recursive</span> <span class="at">--no-sign-request</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> s3 cp s3://ursa-labs-taxi-data/2011 nyc-taxi/ <span class="at">--recursive</span> <span class="at">--no-sign-request</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> s3 cp s3://ursa-labs-taxi-data/2012 nyc-taxi/ <span class="at">--recursive</span> <span class="at">--no-sign-request</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode sh code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> nyc-taxi/2009 nyc-taxi/2010 nyc-taxi/2011 nyc-taxi/2012</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> s3 cp s3://ursa-labs-taxi-data/2009 nyc-taxi/2009 <span class="at">--recursive</span> <span class="at">--no-sign-request</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> s3 cp s3://ursa-labs-taxi-data/2010 nyc-taxi/2010 <span class="at">--recursive</span> <span class="at">--no-sign-request</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> s3 cp s3://ursa-labs-taxi-data/2011 nyc-taxi/2011 <span class="at">--recursive</span> <span class="at">--no-sign-request</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ex">aws</span> s3 cp s3://ursa-labs-taxi-data/2012 nyc-taxi/2012 <span class="at">--recursive</span> <span class="at">--no-sign-request</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Besides being relatively chonky (17Gb), there are two features of this dataset that we’ll come back to since they are key to our workflow:</p>
 <ul>
 <li>The data are stored in <code>.parquet</code> file format.</li>
