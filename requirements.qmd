@@ -205,11 +205,11 @@ download options.
 Let's create a folder somewhere on your computer to store the taxi data: 
 
 ```sh
-mkdir nyc-taxi
-aws s3 cp s3://ursa-labs-taxi-data/2009 nyc-taxi/ --recursive --no-sign-request
-aws s3 cp s3://ursa-labs-taxi-data/2010 nyc-taxi/ --recursive --no-sign-request
-aws s3 cp s3://ursa-labs-taxi-data/2011 nyc-taxi/ --recursive --no-sign-request
-aws s3 cp s3://ursa-labs-taxi-data/2012 nyc-taxi/ --recursive --no-sign-request
+mkdir -p nyc-taxi/2009 nyc-taxi/2010 nyc-taxi/2011 nyc-taxi/2012
+aws s3 cp s3://ursa-labs-taxi-data/2009 nyc-taxi/2009 --recursive --no-sign-request
+aws s3 cp s3://ursa-labs-taxi-data/2010 nyc-taxi/2010 --recursive --no-sign-request
+aws s3 cp s3://ursa-labs-taxi-data/2011 nyc-taxi/2011 --recursive --no-sign-request
+aws s3 cp s3://ursa-labs-taxi-data/2012 nyc-taxi/2012 --recursive --no-sign-request
 ```
 
 Besides being relatively chonky (17Gb), there are two features of this dataset that
@@ -252,8 +252,8 @@ library(dplyr)
 data_path = "nyc-taxi/2010" # Or set your own preferred path
 
 open_dataset("s3://ursa-labs-taxi-data/2010") |>
-    write_dataset(data_path, partition = "month")
+    write_dataset(data_path)
 ```
 
 Be forewarned that these alternative download approaches are going to be slower
-than the `aws cli` approach.
+than the `aws cli` approach, also the partioning 
